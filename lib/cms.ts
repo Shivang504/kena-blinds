@@ -39,13 +39,18 @@ function normalizeContent(input: Partial<SiteContent>): SiteContent {
 }
 
 export async function getSiteContent(): Promise<SiteContent> {
-  const db = await getDb();
-  const doc = await db.collection("cms").findOne({ _id: "siteContent" });
-  if (!doc) {
+  try {
+    const db = await getDb();
+    const doc = await db.collection("cms").findOne({ _id: "siteContent" });
+    if (!doc) {
+      return defaultContent;
+    }
+    const { _id, ...rest } = doc as { _id: string } & Partial<SiteContent>;
+    return normalizeContent(rest);
+  } catch (error) {
+    console.error("Failed to load site content:", error);
     return defaultContent;
   }
-  const { _id, ...rest } = doc as { _id: string } & Partial<SiteContent>;
-  return normalizeContent(rest);
 }
 
 export async function updateSiteContent(content: Partial<SiteContent>) {
