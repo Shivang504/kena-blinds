@@ -2,41 +2,29 @@
 
 import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
+import type { HeroSlide } from "@/lib/cms-types"
 
-const slides = [
-  {
-    img: "/luxury-living-room-with-roller-blinds.jpg",
-    headline: "Transform Your Space with Elegant Blinds",
-    sub: "Premium window treatments tailored to your home.",
-  },
-  {
-    img: "/soft-sheer-curtains-in-sunlit-bedroom.jpg",
-    headline: "Custom Curtains for Every Home",
-    sub: "Beautiful fabrics, perfect fit, seamless installation.",
-  },
-  {
-    img: "/modern-kitchen-with-venetian-blinds.jpg",
-    headline: "Designed for Melbourne Living",
-    sub: "Serving Melbourne & Victoria with care.",
-  },
-]
+type HeroSliderProps = {
+  slides: HeroSlide[]
+}
 
-export function HeroSlider() {
+export function HeroSlider({ slides }: HeroSliderProps) {
+  const safeSlides = slides.length ? slides : [{ img: "", headline: "Welcome", sub: " " }]
   const [index, setIndex] = useState(0)
 
   useEffect(() => {
     const id = setInterval(() => {
-      setIndex((i) => (i + 1) % slides.length)
+      setIndex((i) => (i + 1) % safeSlides.length)
     }, 5000)
     return () => clearInterval(id)
-  }, [])
+  }, [safeSlides.length])
 
-  const current = slides[index]
+  const current = safeSlides[index]
 
   return (
     <section aria-label="Hero" className="relative">
       <div className="relative h-[60vh] md:h-[80vh] overflow-hidden">
-        {slides.map((s, i) => (
+        {safeSlides.map((s, i) => (
           <img
             key={i}
             src={s.img || "/placeholder.svg"}

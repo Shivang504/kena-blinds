@@ -6,13 +6,14 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Mail, Phone, MapPin } from "lucide-react"
 import { useState } from "react"
+import type { ContactContent } from "@/lib/cms-types"
 import emailjs from "@emailjs/browser"
 
-const EMAIL = "kenablinds21@gmail.com"
-const PHONE_DISPLAY = "+61 466 212 796"
-const WHATSAPP_URL = "https://wa.me/61466212796"
+type ContactSectionProps = {
+  content: ContactContent
+}
 
-export function ContactSection() {
+export function ContactSection({ content }: ContactSectionProps) {
   const [form, setForm] = useState({ name: "", email: "", message: "" })
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle")
 
@@ -33,7 +34,7 @@ export function ContactSection() {
           from_name: form.name,
           from_email: form.email,
           message: form.message,
-          to_email: EMAIL,
+          to_email: content.email,
         },
         PUBLIC_KEY
       )
@@ -50,24 +51,31 @@ export function ContactSection() {
     <section id="contact" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <h2 className="font-serif text-3xl md:text-4xl">Get a Free Quote</h2>
-          <p className="mt-3 leading-relaxed">
-            Reach out by email, phone, or WhatsApp. We serve Melbourne and surrounding areas across Victoria.
-          </p>
+          <h2 className="font-serif text-3xl md:text-4xl">{content.heading}</h2>
+          <p className="mt-3 leading-relaxed">{content.description}</p>
           <ul className="mt-6 space-y-3 text-sm">
             <li className="flex items-center gap-2">
-              <Mail className="h-5 w-5 text-primary" /> {EMAIL}
+              <Mail className="h-5 w-5 text-primary" />
+              <a className="hover:text-primary transition-colors" href={`mailto:${content.email}`}>
+                {content.email}
+              </a>
             </li>
             <li className="flex items-center gap-2">
-              <Phone className="h-5 w-5 text-primary" /> {PHONE_DISPLAY}
+              <Phone className="h-5 w-5 text-primary" />
+              <a
+                className="hover:text-primary transition-colors"
+                href={content.phoneLink || `tel:${content.phoneDisplay}`}
+              >
+                {content.phoneDisplay}
+              </a>
             </li>
             <li className="flex items-center gap-2">
-              <MapPin className="h-5 w-5 text-primary" /> Melbourne, VIC, Australia
+              <MapPin className="h-5 w-5 text-primary" /> {content.location}
             </li>
           </ul>
           <div className="mt-4">
             <Button asChild variant="outline" className="rounded-full bg-transparent">
-              <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
+              <a href={content.whatsappUrl} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">
                 Chat on WhatsApp
               </a>
             </Button>
@@ -123,10 +131,10 @@ export function ContactSection() {
             )}
             {status === "error" && (
               <p className="text-red-600">
-                We couldn’t send your message automatically. You can also email us at {EMAIL} or WhatsApp us via{" "}
+                We couldn’t send your message automatically. You can also email us at {content.email} or WhatsApp us via{" "}
                 <a
                   className="underline"
-                  href={WHATSAPP_URL}
+                  href={content.whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
