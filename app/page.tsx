@@ -1,3 +1,6 @@
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 import { Navbar } from '@/components/navbar';
 import { HeroSlider } from '@/components/hero-slider';
 import { About } from '@/components/about';

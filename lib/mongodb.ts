@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'mongodb+srv://shivang:shivang32323232@cluster0.ie1tteb.mongodb.net/?appName=Cluster0';
+const uri = process.env.MONGODB_URI;
 if (!uri) {
   throw new Error('MONGODB_URI is not set');
 }
@@ -13,7 +13,7 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-if ((process.env.NODE_ENV === 'development' || 'production')) {
+if (process.env.NODE_ENV === 'development' || 'production') {
   if (!global._mongoClientPromise) {
     const client = new MongoClient(uri);
     global._mongoClientPromise = client.connect();
