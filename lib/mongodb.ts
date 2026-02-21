@@ -5,7 +5,7 @@ if (!uri) {
   throw new Error('MONGODB_URI is not set');
 }
 
-const dbName = process.env.MONGODB_DB || 'kena-blinds';
+const dbName = process.env.MONGODB_DB || 'mongodb+srv://shivang:shivang32323232@cluster0.ie1tteb.mongodb.net/?appName=Cluster0';
 
 let clientPromise: Promise<MongoClient>;
 
